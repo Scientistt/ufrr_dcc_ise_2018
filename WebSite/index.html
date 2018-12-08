@@ -19,6 +19,10 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
   	<link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -29,6 +33,93 @@
 
 	<p class="animated fadeInUp delay-1">Projeto $NOME_DO_PROJETO</p>
 
+
+	<script type="text/javascript">
+
+
+		window.setInterval(function(){
+			  $.ajax({
+			       url : 'data.php', // my php file
+			       type : 'GET', // type of the HTTP request
+			       success : function(result){ 
+			          var obj = jQuery.parseJSON(result);
+			          //console.log(obj);
+			          var data = obj[0];
+			          //console.log(data);
+
+			          var imgPresenca = document.getElementById("imgPresenca");
+			          var msgPresenca = document.getElementById("msgPresenca");
+			          if(data[2] == "1")
+			          {
+			          		imgPresenca.src = "http://localhost/ise/images/anybody.png"
+			          		msgPresenca.innerHTML = "A sala está OCUPADA";
+			          }
+			          else
+			          {
+			          		imgPresenca.src = "http://localhost/ise/images/nobody.png"
+			          		msgPresenca.innerHTML = "A sala está VAZIA";
+			          }
+
+			          var imgLuzes = document.getElementById("imgLuzes");
+			          var btnLuzes = document.getElementById("btnLuzes");
+			          var msgLuzes = document.getElementById("msgLuzes");
+			          if(data[0] >= data[1])
+			          {
+			          		imgLuzes.src = "http://localhost/ise/images/lampon.gif"
+			          		$("#btnLuzes").removeClass("btn-sucess").addClass("btn-danger");
+			          		btnLuzes.innerHTML = "Desligar Lâmpada";
+			          		msgLuzes.innerHTML = "As luzes estão LIGADAS";
+			          }
+			          else
+			          {
+			          		imgLuzes.src = "http://localhost/ise/images/lampoff.gif"
+			          		$("#btnLuzes").removeClass("btn-danger").addClass("btn-sucess");
+			          		btnLuzes.innerHTML = "Ligar Lâmpada";
+			          		msgLuzes.innerHTML = "As luzes estão DESLIGADAS";
+			          }
+			          
+
+			          var imgCentral = document.getElementById("imgCentral");
+			          var btnCentral = document.getElementById("btnCentral");
+			          var msgCentral = document.getElementById("msgCentral");
+			          if(data[3] >= data[4])
+			          {
+			          		imgCentral.src = "http://localhost/ise/images/airon.png"
+			          		$("#btnCentral").removeClass("btn-sucess").addClass("btn-danger");
+			          		btnCentral.innerHTML = "Desligar Central";
+			          		msgCentral.innerHTML = "A central está LIGADA";
+			          }
+			          else
+			          {
+			          		imgCentral.src = "http://localhost/ise/images/airoff.png"
+			          		$("#btnCentral").removeClass("btn-danger").addClass("btn-sucess");
+			          		btnCentral.innerHTML = "Ligar Central";
+			          		msgCentral.innerHTML = "A central está DESLIGADAS";
+			          }
+
+			          var dataEHora = document.getElementById("data_e_hora");
+			          var formatada = new Date(data[5]);
+			          var monthNames = [
+					    "Janeiro", "Fevereiro", "Março",
+					    "Abril", "Maio", "Junho", "Julho",
+					    "Agosto", "Setembro", "Outubro",
+					    "Novembro", "Dezembro"
+					  ];
+					  var day = formatada.getDate();
+					  var monthIndex = formatada.getMonth();
+					  var year = formatada.getFullYear();
+					  var hour = formatada.getHours();
+					  var min = formatada.getMinutes();
+					  var sec = formatada.getSeconds();
+			        
+			          dataEHora.innerHTML = 'Dados atuais de <b>' + day + ' de ' + monthNames[monthIndex] + ' de ' + year + "</b> às <b>" + hour + 'h' + min + 'm' + sec + 's</b>';
+
+			       }
+			   });
+		}, 500);
+
+    </script>   
+
 <div class="row">
 	<div class="col-lg-6 col-lg-offset-3">
 
@@ -36,14 +127,24 @@
 		    <thead>
 		      <tr>
 		        <th>Funcionalidade</th>
-		        <th>Status Atual</th>
-		        <th>Ações</th>
+		        <th><div style="width: 100%;" align="center">
+		        		Status Atual
+
+		        	</div></th>
+		        <th><div style="width: 100%;" align="center">
+		        		Ações
+
+		        	</div></th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<tr class="">
-		        <td width="40%">Presença</td>
-		        <td width="20%"><img width="50%" src="images/anybody.png" id="lampada"></td>
+		        <td width="40%" valign="true"><div id='msgPresenca'>Carregando...</div></td>
+		        <td width="20%" align="center">
+		        	<div style="width: 100%;" align="center">
+		        		<img width="50%" src="images/anybody.png" id="imgPresenca">
+		        	</div>
+		        </td>
 		        <td width="40%">
 		        	<div>
 		            	<button style="width: 100%" class="btn btn-alert btn-blocked">Nenhuma Ação Disponível</button>
@@ -52,24 +153,40 @@
 		      </tr>
 
 		      <tr class="info">
-		        <td width="40%">Luzes</td>
-		        <td width="20%"><img width="50%" src="images/lampon.gif" id="lampada"></td>
+		        <td width="40%"><div id='msgLuzes'>Carregando...</div></td>
+		        <td width="20%">
+		        	<div style="width: 100%;" align="center">
+		        		<img width="50%" src="images/lampon.gif" id="imgLuzes">
+		        	</div>
+		        </td>
 		        <td width="40%">
 		        	<div>
-		            	<button id="botaolampada" style="width: 100%" class="btn btn-success">Ligar Lâmpada</button>
+		            	<button style="width: 100%" id="btnLuzes" class="btn btn-success">Ligar Lâmpada</button>
 		        	</div>
 		        </td>
 		      </tr>
 		      
 		      <tr class="">
-		        <td width="40%">Central </td>
-		        <td width="20%"><img width="50%" src="images/airon.png" id="lampada"></td>
+		        <td width="40%"><div id='msgCentral'>Carregando...</div></td>
+		        <td width="20%">
+		        	<div style="width: 100%;" align="center">
+		        		<img width="50%" src="images/airon.png" id="imgCentral">
+		        	</div>
+		        </td>
 		        <td width="40%">
 		        	<div>
-		            	<button style="width: 100%; margin-bottom: 5px" class="btn btn-success">Ligar</button>
+		            	<button id='btnCentral' style="width: 100%; margin-bottom: 5px" class="btn btn-success">Ligar</button>
 		            	<button style="width: 49%" class="btn btn-warning">Diminuir </button>
 		            	<button style="width: 49%" class="btn btn-info">Aumentar </button>
 		        	</div>
+		        </td>
+		      </tr>
+
+		      <tr class="">
+		        <td width="40%" colspan="3">
+			        <div style="width: 100%;" align="center" id="data_e_hora">
+			        	Dados atuais de <b>01 de Janeiro de 1980</b> às <b>12h00m00s</b>	
+			        </div>
 		        </td>
 		      </tr>
 
