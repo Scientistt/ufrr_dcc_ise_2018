@@ -28,13 +28,62 @@
 
 <body>
 	<h1>
-  		<div class="animated fadeInLeft">Introdução à Sistemas</div><div class="animated fadeInRight">Embarcados</div>
+  		<div class="animated fadeInLeft">DCC919D Introdução à</div><div class="animated fadeInRight">Sistemas Embarcados</div>
 	</h1>
 
-	<p class="animated fadeInUp delay-1">Projeto $NOME_DO_PROJETO</p>
-
+	<p class="animated fadeInUp delay-1"> <i>Static Shock Project</i></p>
 
 	<script type="text/javascript">
+
+		var verificaSistema = function() {
+			$.ajax({
+			       url : 'verificar.php', // my php file
+			       type : 'GET', // type of the HTTP request
+			       success : function(result){
+
+			       }
+			   });
+		}
+
+		var lampada = function() {
+			$.ajax({
+			       url : 'lampada.php', // my php file
+			       type : 'GET', // type of the HTTP request
+			       success : function(result){
+
+			       }
+			   });
+		}
+
+		var central = function() {
+			$.ajax({
+			       url : 'central.php', // my php file
+			       type : 'GET', // type of the HTTP request
+			       success : function(result){
+
+			       }
+			   });
+		}
+
+		var centralAu = function() {
+			$.ajax({
+			       url : 'aumenta.php', // my php file
+			       type : 'GET', // type of the HTTP request
+			       success : function(result){
+
+			       }
+			   });
+		}
+
+		var centralDi = function() {
+			$.ajax({
+			       url : 'diminui.php', // my php file
+			       type : 'GET', // type of the HTTP request
+			       success : function(result){
+
+			       }
+			   });
+		}
 
 
 		window.setInterval(function(){
@@ -45,35 +94,44 @@
 			          var obj = jQuery.parseJSON(result);
 			          //console.log(obj);
 			          var data = obj[0];
+
+			          
 			          //console.log(data);
 
 			          var imgPresenca = document.getElementById("imgPresenca");
 			          var msgPresenca = document.getElementById("msgPresenca");
+			          var btnPresenca = document.getElementById("btnPresenca");
+			          var dataPresenca = document.getElementById("dataPresenca");
+			          $("#btnPresenca").removeClass("btn-success").addClass("btn-block");
+			          btnPresenca.innerHTML = "Nenhuma ação disponível"
+			          dataPresenca.innerHTML = "PIR: " + data[2];
 			          if(data[2] == "1")
 			          {
-			          		imgPresenca.src = "http://localhost/ise/images/anybody.png"
+			          		imgPresenca.src = window.location + "/images/anybody.png"
 			          		msgPresenca.innerHTML = "A sala está OCUPADA";
 			          }
 			          else
 			          {
-			          		imgPresenca.src = "http://localhost/ise/images/nobody.png"
+			          		imgPresenca.src = window.location + "/images/nobody.png"
 			          		msgPresenca.innerHTML = "A sala está VAZIA";
 			          }
 
 			          var imgLuzes = document.getElementById("imgLuzes");
 			          var btnLuzes = document.getElementById("btnLuzes");
 			          var msgLuzes = document.getElementById("msgLuzes");
-			          if(data[0] >= data[1])
+			          var dataLuzes = document.getElementById("dataLuzes");
+			          dataLuzes.innerHTML = "LDR: " + data[0] + " e CONSTANTE: " + data[1];
+			          if(data[0] <= data[1])
 			          {
-			          		imgLuzes.src = "http://localhost/ise/images/lampon.gif"
-			          		$("#btnLuzes").removeClass("btn-sucess").addClass("btn-danger");
+			          		imgLuzes.src = window.location + "/images/lampon.gif"
+			          		$("#btnLuzes").removeClass("btn-success").addClass("btn-danger");
 			          		btnLuzes.innerHTML = "Desligar Lâmpada";
 			          		msgLuzes.innerHTML = "As luzes estão LIGADAS";
 			          }
 			          else
 			          {
-			          		imgLuzes.src = "http://localhost/ise/images/lampoff.gif"
-			          		$("#btnLuzes").removeClass("btn-danger").addClass("btn-sucess");
+			          		imgLuzes.src = window.location + "/images/lampoff.gif"
+			          		$("#btnLuzes").removeClass("btn-danger").addClass("btn-success");
 			          		btnLuzes.innerHTML = "Ligar Lâmpada";
 			          		msgLuzes.innerHTML = "As luzes estão DESLIGADAS";
 			          }
@@ -82,21 +140,28 @@
 			          var imgCentral = document.getElementById("imgCentral");
 			          var btnCentral = document.getElementById("btnCentral");
 			          var msgCentral = document.getElementById("msgCentral");
-			          if(data[3] >= data[4])
+			          var dataCentral = document.getElementById("dataCentral");
+			          dataCentral.innerHTML = "PIEZO: " + data[3] + " e CONSTANTE: " + data[4];
+			          
+			          
+
+			          if(parseInt(data[3]) >= parseInt(data[4]))
 			          {
-			          		imgCentral.src = "http://localhost/ise/images/airon.png"
-			          		$("#btnCentral").removeClass("btn-sucess").addClass("btn-danger");
+			          		imgCentral.src = window.location + "/images/airon.png"
+			          		$("#btnCentral").removeClass("btn-success").addClass("btn-danger");
 			          		btnCentral.innerHTML = "Desligar Central";
-			          		msgCentral.innerHTML = "A central está LIGADA";
+			          		msgCentral.innerHTML = "A central está LIGADA em <b>" + parseFloat(data[7]).toFixed(0) + "º C</b>";
 			          }
 			          else
 			          {
-			          		imgCentral.src = "http://localhost/ise/images/airoff.png"
-			          		$("#btnCentral").removeClass("btn-danger").addClass("btn-sucess");
+			          		imgCentral.src = window.location + "/images/airoff.png"
+			          		$("#btnCentral").removeClass("btn-danger").addClass("btn-success");
 			          		btnCentral.innerHTML = "Ligar Central";
-			          		msgCentral.innerHTML = "A central está DESLIGADAS";
+			          		msgCentral.innerHTML = "A central está DESLIGADA";
 			          }
 
+
+			          
 			          var dataEHora = document.getElementById("data_e_hora");
 			          var formatada = new Date(data[5]);
 			          var monthNames = [
@@ -112,81 +177,102 @@
 					  var min = formatada.getMinutes();
 					  var sec = formatada.getSeconds();
 			        
-			          dataEHora.innerHTML = 'Dados atuais de <b>' + day + ' de ' + monthNames[monthIndex] + ' de ' + year + "</b> às <b>" + hour + 'h' + min + 'm' + sec + 's</b>';
+			          dataEHora.innerHTML = 'Dados atuais de <b>' + day + ' de ' + monthNames[monthIndex] + ' de ' + year + "</b> às <b>" + hour + 'h' + min + 'm' + sec + 's</br>Próxima Verificação Geral do ambiente em ' + (3600 - (data[6] / 10)).toFixed(0) +  " Segundos";
 
 			       }
 			   });
-		}, 500);
+		}, 100);
+
+
+		
+			  
 
     </script>   
 
 <div class="row">
-	<div class="col-lg-6 col-lg-offset-3">
+	<div class="col-lg-8 col-lg-offset-2">
 
 		<table class="table">
 		    <thead>
 		      <tr>
-		        <th>Funcionalidade</th>
+		        <th><b>Funcionalidade</b></th>
 		        <th><div style="width: 100%;" align="center">
-		        		Status Atual
+		        		<b>Status Atual</b>
 
 		        	</div></th>
 		        <th><div style="width: 100%;" align="center">
-		        		Ações
+		        		<b>Ações</b>
 
 		        	</div></th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<tr class="">
-		        <td width="40%" valign="true"><div id='msgPresenca'>Carregando...</div></td>
+		        <td width="50%" valign="true">
+		        	<h3 style="padding: 0px; margin: 0px">Sensor de Presença</h3>
+		        	<div id='msgPresenca'>Carregando...</div>
+		        	<div id='dataPresenca' style="font-size: 80%">Carregando...</div>
+		        </td>
 		        <td width="20%" align="center">
 		        	<div style="width: 100%;" align="center">
-		        		<img width="50%" src="images/anybody.png" id="imgPresenca">
+		        		<img width="50%" src="images/question.png" id="imgPresenca">
 		        	</div>
 		        </td>
-		        <td width="40%">
+		        <td width="30%">
 		        	<div>
-		            	<button style="width: 100%" class="btn btn-alert btn-blocked">Nenhuma Ação Disponível</button>
+		            	<button id="btnPresenca" style="width: 100%" class="btn btn-success">Carregando...</button>
 		        	</div>
 		        </td>
 		      </tr>
 
 		      <tr class="info">
-		        <td width="40%"><div id='msgLuzes'>Carregando...</div></td>
+		        <td width="40%">
+		        	<h3 style="padding: 0px; margin: 0px">Sensor de Luminosidade</h3>
+		        	<div id='msgLuzes'>Carregando...</div>
+		        	<div id='dataLuzes' style="font-size: 80%">Carregando...</div>
+		        </td>	
 		        <td width="20%">
 		        	<div style="width: 100%;" align="center">
-		        		<img width="50%" src="images/lampon.gif" id="imgLuzes">
+		        		<img width="50%" src="images/question.png" id="imgLuzes">
 		        	</div>
 		        </td>
 		        <td width="40%">
 		        	<div>
-		            	<button style="width: 100%" id="btnLuzes" class="btn btn-success">Carregando...</button>
+		            	<button onclick="lampada()" style="width: 100%" id="btnLuzes" class="btn btn-success">Carregando...</button>
 		        	</div>
 		        </td>
 		      </tr>
 		      
 		      <tr class="">
-		        <td width="40%"><div id='msgCentral'>Carregando...</div></td>
+		        <td width="40%">
+		        	<h3 style="padding: 0px; margin: 0px">Sensor de Vibração e Temperatura</h3>
+		        	<div id='msgCentral'>Carregando...</div>
+		        	<div id='dataCentral' style="font-size: 80%">Carregando...</div>
+		        </td>	
 		        <td width="20%">
 		        	<div style="width: 100%;" align="center">
-		        		<img width="50%" src="images/airon.png" id="imgCentral">
+		        		<img width="50%" src="images/question.png" id="imgCentral">
 		        	</div>
 		        </td>
 		        <td width="40%">
 		        	<div>
-		            	<button id='btnCentral' style="width: 100%; margin-bottom: 5px" class="btn btn-success">Carregando...</button>
-		            	<button style="width: 49%" class="btn btn-warning">Diminuir </button>
-		            	<button style="width: 49%" class="btn btn-info">Aumentar </button>
+		            	<button onclick="central()" id='btnCentral' style="width: 100%; margin-bottom: 5px" class="btn btn-success">Carregando...</button>
+		            	<button onclick="centralDi()" style="width: 49%" class="btn btn-info">Diminuir </button>
+		            	<button onclick="centralAu()" style="width: 49%" class="btn btn-warning">Aumentar </button>
 		        	</div>
 		        </td>
 		      </tr>
 
-		      <tr class="">
-		        <td width="40%" colspan="3">
+		      <tr class="info">
+		        <td width="40%" colspan="2">
 			        <div style="width: 100%;" align="center" id="data_e_hora">
 			        	Carregando...	
-			        </div>
+			        </div>  	
+		        </td>
+		        <td class="info">
+		        	<button type="submit" name='verifica' onclick="verificaSistema();" class="btn btn-success" style="width: 100%;" align="center">
+				        	Verificar Agora
+				    	</button>
 		        </td>
 		      </tr>
 
@@ -206,8 +292,6 @@
   
 
     <script  src="js/index.js"></script>
-
-
 
 
 </body>

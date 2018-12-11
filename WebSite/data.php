@@ -24,7 +24,9 @@ while($enr = mysqli_fetch_assoc($result)){
         $enr['sensor_de_presenca'],
         $enr['sensor_de_vibracao'],
         $enr['constante_sensor_de_vibracao'],
-        $enr['data_e_hora']
+        $enr['data_e_hora'],
+        $enr['contador_de_tempo'],
+        $enr['sensor_de_temperatura']
     );
     array_push($data, $a);
 }
